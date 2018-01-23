@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 注解驱动：请求参数绑定到控制器的方法参数上进行校验及信息转换 -->
+	<!-- 这是一种简写形式,会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter两个bean,是spring MVC为@Controllers分发请求所必须的。
+	并提供了数据绑定支持，@NumberFormatannotation支持，@DateTimeFormat支持，@Valid支持，读写XML的支持（JAXB），读写JSON的支持(Jackson)。
+	后面我们处理响应ajax请求时，就使用到了对json的支持。对action写JUnit单元测试时，要从spring IOC容器中取DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter两个bean，来完成测试 -->
+	<mvc:annotation-driven />
+	
+	<!-- 设置使用SpringMVC注解的类所在包 使用自定义过滤器:只扫描指定注解 -->
+	<context:component-scan base-package="com.bo.springmvc.controller" use-default-filters="false">
+		<!-- 防止SpringMVC和SpringIOC对同一个对象的管理重合 -->
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+	
+	<!-- 将静态资源的处理经由Spring MVC框架交回Web应用服务器处理(不支持访问WEB-INF目录) -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 由Spring MVC框架自己处理的静态资源，并添加一些有用的附加值功能(支持访问WEB-INF目录) -->
+	<!-- <mvc:resources mapping="" location="" /> -->
+	
+	<!-- 加载配置文件 -->
+	<!-- classpath是指 WEB-INF文件夹下的classes目录  -->
+	<!-- classpath:和classpath*:的区别： 
+		 classpath:只会到你的classes路径中查找找文件; 
+		 classpath*:不仅包含classes路径，还包括jar包中的classes路径进行查找. -->
+	<context:property-placeholder location="classpath:config/*.properties" ignore-unresolvable="true" />
+	
+	<!-- 访问拦截 -->
+<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			拦截所有请求
+			<mvc:mapping path="/**" />
+			拦截根目录
+			<mvc:mapping path="/" />
+			排除指定路径
+			<mvc:exclude-mapping path="/test/**"/>
+			<mvc:mapping path="/user/**" />
+			<mvc:mapping path="/test/**" />
+			exclude标签只能在include存在时使用且必须在最后声明
+			<mvc:exclude-mapping path="/user/login" />
+			<bean class="com.bo.springmvc.interceptor.CommonInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+	
+	<!-- 该标签用于简化ParameterizableViewController映射到视图的配置,当响应视图是不需要执行控制器逻辑时使用
+		path="/hello" 就是你访问的路径,相当于RequestMapping("/hello")
+		view-name="hello"是你所要的视图,如hello.jsp,相当于return "hello" 或 "redirect:hello"
+	 -->
+	<mvc:view-controller path="/" view-name="index"/>
+	
+	<!-- 配置springMVC的默认视图解析器(上边的解析器优先)如何把handler方法返回值解析为实际的物理视图 (默认使用html)-->
+	<bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="contentType" value="text/html"/>
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	<!-- 多个jsp视图解析器配置 order:order值越低，则优先级越高-->
+	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2"/>
+		<property name="viewNames" value="*"/>
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean> -->
+	
+	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8" />  
+        <!-- 文件大小最大值 -->
+        <property name="maxUploadSize" value="10485760000" />  
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960" />  
+    </bean>
+    
+    <!-- 控制器全局异常处理 -->
+    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" />
+</beans>

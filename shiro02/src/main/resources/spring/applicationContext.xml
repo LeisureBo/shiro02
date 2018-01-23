@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- enable autowire -->
+	<!-- 隐式地向 Spring容器注册AutowiredAnnotationBeanPostProcessor、RequiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor以及PersistenceAnnotationBeanPostProcessor这4个BeanPostProcessor -->
+	<!-- 无需在配置文件中声明相应的processor即可使用  @Autowired、@Required、@Resource、@PostConstruct、@PreDestroy、@PersistenceContext等注解 -->
+	<context:annotation-config />
+	
+	<!-- configure the springIOC -->
+	<!-- 指定了需要扫描的类包，类包及其递归子包中所有的类都会被处理 -->
+	<!-- 该配置项其实也包含了自动注入上述processor的功能，因此当使用<context:component-scan/>后，即可将<context:annotation-config/>省去。 -->
+	<context:component-scan base-package="com.bo.shiro">
+		<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描，防止SpringMVC和SpringIOC对同一个对象的管理重合 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<!-- Load resource file -->
+	<context:property-placeholder location="classpath:config/*.properties" ignore-unresolvable="true" />
+	
+	<!-- 配置数据源 阿里数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!--  -->
+		<property name="filters" value="${filters}" />
+		<!-- 初始化连接数量 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 最大并发连接数 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 最大空闲连接数 -->
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接等待超时等待时间(以毫秒为单位) -->
+		<property name="maxWait" value="${maxWait}"></property>
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 (设置为非正数则不运行空闲连接回收器线程)-->
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒(连接在池中保持空闲而不被空闲连接回收器线程回收) -->
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+		<!-- 每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->  
+        <property name="numTestsPerEvictionRun" value="${numTestsPerEvictionRun}"/>
+        <!-- 在将连接返回给调用者之前,用来验证从连接池取出的连接.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录 -->
+		<property name="validationQuery" value="${validationQuery}" />
+		<!-- 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.注意:设置为true后如果要生效,validationQuery参数必须设置为非空字符串 -->
+		<property name="testWhileIdle" value="${testWhileIdle}" />
+		<!-- 指明是否在从池中取出连接前进行检验.如果检验失败,则从池中去除连接并尝试取出另一个.注意:设置为true后如果要生效,validationQuery参数必须设置为非空字符串 -->
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<!-- 指明是否在归还到池中前进行检验.注意:设置为true后如果要生效,validationQuery参数必须设置为非空字符串 -->
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<!-- 是否开启池的prepared statement池功能 -->
+		<property name="poolPreparedStatements" value="${poolPreparedStatements}" />
+		<!-- statement池能够同时分配的打开的statements的最大数量,如果设置为0表示不限制 -->
+		<property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+		<!-- 是否自动回收超时连接 -->
+		<property name="removeAbandoned" value="${removeAbandoned}" />
+		<!-- 超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+		<!-- 关闭abanded连接时输出错误日志(连接被泄露时是否打印) -->
+		<property name="logAbandoned" value="${logAbandoned}" />
+	</bean>
+	
+	<!-- import resource config -->
+	<import resource="classpath:spring/spring-shiro-web.xml"/>
+	
+</beans>
