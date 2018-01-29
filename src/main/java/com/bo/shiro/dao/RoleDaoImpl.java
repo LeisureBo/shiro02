@@ -21,7 +21,7 @@ import com.bo.shiro.entity.Role;
  * @author 王博
  * @version 2017年10月18日　下午4:48:27
  */
-@Repository("roleDao")
+//@Repository("roleDao")
 public class RoleDaoImpl extends JdbcDaoSupport implements RoleDao, RowMapper<Role> {
 
 	@Override

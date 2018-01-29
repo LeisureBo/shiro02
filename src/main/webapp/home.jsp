@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
@@ -21,7 +22,7 @@
 
 <body>
      <shiro:hasAnyRoles name="admin">
-         <shiro:principal/>拥有角色admin
+         [<shiro:principal/>]拥有角色admin
      </shiro:hasAnyRoles>
 </body>
 </html>

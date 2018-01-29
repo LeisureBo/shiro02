@@ -30,25 +30,6 @@ public class GlobalExceptionHandler {
 	private final static String EXCEPTION_MSG_KEY = "expMsg";
 	
     /**
-     * @Description 身份认证失败异常
-     * @param request
-     * @param e
-     * @return
-     */
-    @ExceptionHandler({UnauthenticatedException.class})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public Object processUnauthenticatedException(NativeWebRequest request, UnauthenticatedException e) {
-        LOG.info("Unauthenticated Exception " + e.getMessage());
-		// ModelAndView mv = new ModelAndView();
-		// mv.addObject(EXCEPTION_MSG_KEY, e.getMessage());
-		// mv.setViewName("unauthenticated");
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(EXCEPTION_MSG_KEY, e.getMessage());
-        return jsonObject;
-    }
-	
-    /**
      * @Description 无权限异常
      * @param request
      * @param e
@@ -57,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UnauthorizedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ModelAndView processUnauthorizedException(NativeWebRequest request, UnauthorizedException e) {
-        LOG.info("Unauthorized Exception " + e.getMessage());
+        LOG.info("Unauthorized Exception: " + e.getMessage());
     	ModelAndView mv = new ModelAndView();
         mv.addObject(EXCEPTION_MSG_KEY, e.getMessage());
         mv.setViewName("unauthorized");
@@ -67,14 +48,14 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BusinessException.class)
 	@ResponseBody
 	public void handleBizExp(HttpServletRequest request, Exception e) {
-		LOG.info("Business exception " + e.getMessage());
+		LOG.info("Business exception: " + e.getMessage());
 		request.getSession(true).setAttribute(EXCEPTION_MSG_KEY, e.getMessage());
 	}
     
 	@ExceptionHandler(SQLException.class)
 	@ResponseBody
 	public Object processSqlException(SQLException e) {
-		LOG.info("SQL Exception " + e.getMessage());
+		LOG.info("SQL Exception: " + e.getMessage());
 		// ModelAndView mv = new ModelAndView();
 		// mv.addObject(EXCEPTION_MSG_KEY, e.getMessage());
 		// mv.setViewName("sql_error");

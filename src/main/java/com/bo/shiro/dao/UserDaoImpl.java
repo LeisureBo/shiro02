@@ -28,7 +28,7 @@ import com.bo.shiro.entity.UserStatus;
  * @author 王博
  * @version 2017年10月18日　下午2:16:40
  */
-@Repository("userDao")
+//@Repository("userDao")
 public class UserDaoImpl extends JdbcDaoSupport implements UserDao, RowMapper<User> {
 
 	@Override

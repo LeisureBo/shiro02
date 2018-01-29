@@ -21,7 +21,7 @@ import com.bo.shiro.entity.Permission;
  * @author 王博
  * @version 2017年10月18日　下午5:03:02
  */
-@Repository("permissionDao")
+//@Repository("permissionDao")
 public class PermissionDaoImpl extends JdbcDaoSupport implements PermissionDao, RowMapper<Permission> {
 	
 	@Override

@@ -117,4 +117,9 @@ public class UserRealm extends AuthorizingRealm {
 		clearAllCachedAuthorizationInfo();
 	}
 
+	/** Spring注入方法 */
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
 }
