@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
 	<!-- 注解驱动：请求参数绑定到控制器的方法参数上进行校验及信息转换 -->
 	<!-- 这是一种简写形式,会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter两个bean,是spring MVC为@Controllers分发请求所必须的。
@@ -16,6 +21,13 @@
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
+	
+	<!-- 以下配置用于开启Shiro Spring AOP权限注解的支持 -->
+	<aop:config proxy-target-class="true" />
+	<!-- 如果除controller层以外，例如service层也需要使用shiro注解则需要将此配置在applicationContext.xml再配置一份ID不同的Bean即可 -->
+    <bean id="controllerAuthorizationAdvisor" class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
 	
 	<!-- 将静态资源的处理经由Spring MVC框架交回Web应用服务器处理(不支持访问WEB-INF目录) -->
 	<mvc:default-servlet-handler />

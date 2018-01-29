@@ -71,12 +71,6 @@
         <property name="cacheManager" ref="cacheManager"/>
     </bean>
     
-    <!-- 以下配置用于开启Shiro Spring AOP权限注解的支持 -->
-	<aop:config proxy-target-class="true" />
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager" />
-	</bean>
-    
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
@@ -91,6 +85,7 @@
     </bean>
     
     <!-- Shiro的Web过滤器:此处使用ShiroFilterFactoryBean来创建ShiroFilter过滤器;
+    	 id必须和web.xml 文件中配置的DelegatingFilterProxy的filter-name一致;
    		 filters属性用于定义自己的过滤器，即ini配置中的[filters]部分;
    		 filterChainDefinitions用于声明url和filter的关系，即ini配置中的[urls]部分
     -->
@@ -114,7 +109,7 @@
         </property>
     </bean>
 
-    <!-- Shiro生命周期处理器-->
+    <!-- 配置Shiro生命周期处理器: 可以自动的来调用配置在spring IOC 容器中shiro bean的生命周期方法-->
     <!-- LifecycleBeanPostProcessor用于在实现了Initializable接口的Shiro bean初始化时调用Initializable接口回调，在实现了Destroyable接口的Shiro bean销毁时调用 Destroyable接口回调。如UserRealm就实现了Initializable，而DefaultSecurityManager实现了Destroyable -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
     
