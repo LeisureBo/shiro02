@@ -55,6 +55,8 @@
     
     <!-- 会话管理器:使用基于web环境的DefaultWebSessionManager -->
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- 禁用URL回写sessionID -->
+        <property name="sessionIdUrlRewritingEnabled" value="false" />
         <property name="globalSessionTimeout" value="1800000"/>
         <property name="deleteInvalidSessions" value="true"/>
         <property name="sessionValidationSchedulerEnabled" value="true"/>
@@ -102,6 +104,7 @@
             <value>
                 /index.jsp = anon
                 /unauthorized.jsp = anon
+                /error.jsp = anon
                 /login.jsp = authc
                 /logout = logout
                 /** = user

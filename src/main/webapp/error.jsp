@@ -1,16 +1,15 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-
+<!-- 2018年1月30日 下午5:05:26 Created By wangboc -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <base href="<%=basePath%>">
 
-<title>主页</title>
+<title></title>
 
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
@@ -21,10 +20,6 @@
 </head>
 
 <body>
-	<shiro:user>welcome: <shiro:principal/></shiro:user><br/>
-	
-     <shiro:hasAnyRoles name="admin,user">
-         	当前账号拥有角色admin
-     </shiro:hasAnyRoles>
+<h2>There are somethings getting wrong!</h2>
 </body>
 </html>
