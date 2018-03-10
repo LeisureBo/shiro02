@@ -2,8 +2,12 @@ package com.bo.shiro.web.exception;
 
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authc.ExcessiveAttemptsException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.json.JSONObject;
@@ -18,7 +22,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * @Description @ControllerAdvice 注解定义全局异常处理类：捕获异常统一处理
+ * @Description @ControllerAdvice 注解定义全局异常处理类：捕获异常统一处理(捕获controller的异常,shiro异常无法捕获)
  * @author 王博
  * @version 2018年1月22日　下午11:03:58
  */
@@ -45,6 +49,20 @@ public class GlobalExceptionHandler {
         return mv;
     }
 
+    @ExceptionHandler({UnknownAccountException.class,IncorrectCredentialsException.class})
+    @ResponseBody
+    public void processLoginException(HttpServletRequest request, Exception e) {
+    	LOG.info("Login Exception: " + e.getMessage());
+    	request.setAttribute("error", "用户名或密码错误！");
+    }
+    
+    @ExceptionHandler(ExcessiveAttemptsException.class)
+    @ResponseBody
+    public void processExcessiveAttemptsException(HttpServletRequest request, Exception e) {
+    	LOG.info("ExcessiveAttemptsException: " + e.getMessage());
+    	request.setAttribute("error", "重试次数过多，稍后再试！");
+    }
+    
 	@ExceptionHandler(BusinessException.class)
 	@ResponseBody
 	public void handleBizExp(HttpServletRequest request, Exception e) {
