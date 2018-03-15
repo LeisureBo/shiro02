@@ -23,8 +23,10 @@
 	</context:component-scan>
 	
 	<!-- 以下配置用于开启Shiro Spring AOP权限注解的支持 -->
+	<!-- 该配置会扫描配置文件中的所有advisor 并为其创建代理 -->
 	<aop:config proxy-target-class="true" />
 	<!-- 如果除controller层以外，例如service层也需要使用shiro注解则需要将此配置在applicationContext.xml再配置一份ID不同的Bean即可 -->
+    <!-- 该Advisor会匹配所有类、匹配所有加shiro认证注解的方法 -->
     <bean id="controllerAuthorizationAdvisor" class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />
 	</bean>

@@ -35,7 +35,7 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
 			passwordRetryCache.put(username, retryCount);
 		}
 		// 缓存设置的存活时间为10分钟,即当重试次数用完且缓存失效后才可继续重试
-		logger.info("retry------------------->" + retryCount.get() + 1);
+		logger.info("retry------------------->" + (retryCount.get() + 1));
 		if (retryCount.incrementAndGet() > 5) {
 			// if retry count > 5 throw
 			throw new ExcessiveAttemptsException();
