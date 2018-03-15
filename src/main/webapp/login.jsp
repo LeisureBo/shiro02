@@ -23,7 +23,8 @@
 <div style="color:red;">${error}</div>
 	<form action="" method="post">
 		用户名：<input type="text" name="username"><br /> 
-		密码：<input type="password" name="password"><br /> 
+		密码：<input type="password" name="password"><br />
+		下次自动登录：<input type="checkbox" name="rememberMe" value="true"><br/>
 		<input type="submit" value="登录">
 	</form>
 </body>
